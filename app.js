@@ -25,7 +25,7 @@ const FILTER_CONFIG = [
   {
     key: "race_ethnicity",
     label: "Race/Ethnicity",
-    values: ["Latino", "White", "Black", "Asian", "Pacific Islander", "Other/None Listed"],
+    values: ["Latino", "White", "Black", "Asian", "Other/None Listed"],
   },
   { key: "gender", label: "Gender", values: ["Female", "Male"] },
   {
