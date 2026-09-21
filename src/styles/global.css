@@ -119,3 +119,75 @@ h2::after {
     padding-inline: var(--space-7);
   }
 }
+
+/* Site brand bar, ported from web-data-visualization's nav: min-height 120px orange band, Orbitron 900 wordmark at 48px with 0.08em tracking, institute name in Source Sans at 18px with 0.12em tracking. Padding tracks .page-shell's gutters so the wordmark and the page content share a left edge. */
+.site-header {
+  min-height: 7.5rem;
+  color: #ffffff;
+  background: var(--color-brand);
+  box-shadow: var(--shadow-panel);
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  min-height: 7.5rem;
+  width: 100%;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding: var(--space-4) var(--space-4);
+}
+
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.site-wordmark {
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1.875rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.site-brand-divider {
+  width: 1px;
+  height: 3.5rem;
+  background: rgb(255 255 255 / 45%);
+}
+
+.site-institute {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  line-height: 1.625;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 40rem) {
+  .site-header-inner {
+    padding-inline: var(--space-6);
+  }
+
+  .site-brand {
+    gap: var(--space-5);
+  }
+
+  .site-wordmark {
+    font-size: 3rem;
+  }
+
+  .site-institute {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .site-header-inner {
+    padding-inline: var(--space-7);
+  }
+}

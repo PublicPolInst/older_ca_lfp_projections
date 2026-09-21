@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 
 import ComparisonEditor from "./components/ComparisonEditor";
 import DataStatus from "./components/DataStatus";
+import SiteHeader from "./components/SiteHeader";
 import ResultsPanel from "./components/ResultsPanel";
 import { comparisonsReducer, createInitialComparisonsState, normalizeComparisonsForAvailability } from "./app/comparisonsReducer";
 import { downloadCsv } from "./data/downloadCsv";
@@ -78,40 +79,42 @@ export default function App() {
   }, []);
 
   return (
-    <main className="page-shell">
-      <header className="report-header">
-        <p className="eyebrow">PPIC interactive</p>
-        <h1 className="report-title">Older Workers in California: Projections to 2040</h1>
-        <p className="report-intro">
-          The projections below were developed for the PPIC report "Older Workers in California: Projections to
-          2040." The interactive was created with ChatGPT 5.6 Sol &amp; Claude Opus 5. Please contact Eric McGhee{" "}
-          <a href="mailto:mcghee@ppic.org">mcghee@ppic.org</a> with questions or comments.
-        </p>
-      </header>
+    <>
+      <SiteHeader />
+      <main className="page-shell">
+        <header className="report-header">
+          <h1 className="report-title">Older Workers in California: Projections to 2040</h1>
+          <p className="report-intro">
+            The projections below were developed for the PPIC report "Older Workers in California: Projections to
+            2040." The interactive was created with ChatGPT 5.6 Sol &amp; Claude Opus 5. Please contact Eric McGhee{" "}
+            <a href="mailto:mcghee@ppic.org">mcghee@ppic.org</a> with questions or comments.
+          </p>
+        </header>
 
-      {dataState.status === "loading" && <DataStatus status="loading" />}
-      {dataState.status === "error" && <DataStatus status="error" message={dataState.message} onRetry={handleRetry} />}
+        {dataState.status === "loading" && <DataStatus status="loading" />}
+        {dataState.status === "error" && <DataStatus status="error" message={dataState.message} onRetry={handleRetry} />}
 
-      {dataState.status === "ready" && (
-        /* Sidebar-plus-chart workbench, after web-data-visualization's ModuleWorkbench: on desktop the row's height comes from the results card alone, and the sidebar is absolutely positioned inside its cell so a long control list scrolls within that height instead of stretching the page. The cell must stretch (grid default) for that to work. */
-        <div className="workbench">
-          <div className="workbench-sidebar-cell">
-            <ComparisonEditor
-              comparisons={normalizedComparisons}
-              availableOutcomeKeys={availableOutcomeKeys}
-              valueFormat={comparisonsState.valueFormat}
-              dispatch={dispatch}
+        {dataState.status === "ready" && (
+          /* Sidebar-plus-chart workbench, after web-data-visualization's ModuleWorkbench: on desktop the row's height comes from the results card alone, and the sidebar is absolutely positioned inside its cell so a long control list scrolls within that height instead of stretching the page. The cell must stretch (grid default) for that to work. */
+          <div className="workbench">
+            <div className="workbench-sidebar-cell">
+              <ComparisonEditor
+                comparisons={normalizedComparisons}
+                availableOutcomeKeys={availableOutcomeKeys}
+                valueFormat={comparisonsState.valueFormat}
+                dispatch={dispatch}
+              />
+            </div>
+            <ResultsPanel
+              series={series}
+              resultsView={comparisonsState.resultsView}
+              onChangeView={(value) => dispatch({ type: "setResultsView", value })}
+              onDownload={handleDownload}
+              downloadDisabled={downloadDisabled}
             />
           </div>
-          <ResultsPanel
-            series={series}
-            resultsView={comparisonsState.resultsView}
-            onChangeView={(value) => dispatch({ type: "setResultsView", value })}
-            onDownload={handleDownload}
-            downloadDisabled={downloadDisabled}
-          />
-        </div>
-      )}
-    </main>
+        )}
+      </main>
+    </>
   );
 }

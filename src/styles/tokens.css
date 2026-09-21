@@ -24,6 +24,8 @@
   --font-body: "Source Sans 3", Arial, sans-serif;
   --font-control: Inter, Arial, sans-serif;
   --font-editorial: "Source Serif 4", Georgia, "Times New Roman", serif;
+  /* Wordmark only: web-data-visualization renders "PPIC" in Orbitron 900 inside its brand bar. */
+  --font-display: Orbitron, "Arial Black", sans-serif;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
