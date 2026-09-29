@@ -376,6 +376,19 @@
   gap: var(--space-3);
 }
 
+.chart-inplot-key {
+  justify-content: flex-end;
+  align-content: center;
+  column-gap: var(--space-3);
+  row-gap: 0;
+  height: 100%;
+  margin: 0;
+  padding-right: var(--space-1);
+  font-size: 0.8125rem;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
 .legend-style::before {
   content: "";
   display: inline-block;

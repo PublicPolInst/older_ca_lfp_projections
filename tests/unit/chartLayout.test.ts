@@ -3,8 +3,10 @@ import { describe, expect, it } from "vitest";
 import {
   buildLineSegments,
   computeChartLeftMargin,
+  computeKeyBandHeight,
   computeXAxisTickCount,
   computeYAxisScale,
+  extendDomainBelowForBand,
   getRenderableDisplayValues,
   getYearDomain,
   isRenderablePoint,
@@ -158,5 +160,38 @@ describe("computeXAxisTickCount", () => {
 
   it("caps at the configured maximum", () => {
     expect(computeXAxisTickCount(5000, 8)).toBe(8);
+  });
+});
+
+describe("extendDomainBelowForBand", () => {
+  it("places the axis minimum exactly bandHeight pixels above the x axis", () => {
+    const { domainMin, bandHeight } = extendDomainBelowForBand(36, 42, 330, 30);
+    expect(bandHeight).toBe(30);
+    // 6 units span 300px of data height, so 30px of band is 0.6 units.
+    expect(domainMin).toBeCloseTo(35.4, 10);
+    const pixelsPerUnit = 330 / (42 - domainMin);
+    expect((36 - domainMin) * pixelsPerUnit).toBeCloseTo(30, 10);
+  });
+
+  it("caps the band at a third of the plot height", () => {
+    expect(extendDomainBelowForBand(0, 10, 60, 30).bandHeight).toBe(20);
+  });
+
+  it("reserves nothing for degenerate plots", () => {
+    expect(extendDomainBelowForBand(5, 5, 300, 30)).toEqual({ domainMin: 5, bandHeight: 0 });
+    expect(extendDomainBelowForBand(0, 10, 0, 30)).toEqual({ domainMin: 0, bandHeight: 0 });
+  });
+});
+
+describe("computeKeyBandHeight", () => {
+  const labels = ["Actual", "Projected", "Interpolated 2020"];
+
+  it("uses one row when the plot is wide enough for every item", () => {
+    expect(computeKeyBandHeight(labels, 600)).toBe(30);
+  });
+
+  it("adds a row for each wrap a narrow plot forces", () => {
+    expect(computeKeyBandHeight(labels, 180)).toBe(48);
+    expect(computeKeyBandHeight(labels, 60)).toBe(66);
   });
 });

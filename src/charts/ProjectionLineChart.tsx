@@ -10,8 +10,10 @@ import {
   CHART_MARGIN,
   buildLineSegments,
   computeChartLeftMargin,
+  computeKeyBandHeight,
   computeXAxisTickCount,
   computeYAxisScale,
+  extendDomainBelowForBand,
   getRenderableDisplayValues,
   getYearDomain,
   isRenderablePoint,
@@ -85,13 +87,17 @@ export default function ProjectionLineChart({ series }: ProjectionLineChartProps
           <span>{entry.label}</span>
         </span>
       ))}
-      <span className="legend-item legend-style-note">
-        <span className="legend-style solid-style">Actual</span>
-        <span className="legend-style dashed-style">Projected</span>
-        {visible.some((entry) => entry.actual.some((point) => point.status === "interpolated")) && (
-          <span className="legend-style dotted-style">Interpolated 2020</span>
-        )}
-      </span>
+    </div>
+  );
+
+  const hasInterpolated = visible.some((entry) => entry.actual.some((point) => point.status === "interpolated"));
+  const keyLabels = hasInterpolated ? ["Actual", "Projected", "Interpolated 2020"] : ["Actual", "Projected"];
+  /* Line-style key, drawn inside the plot at the lower right; the y scale reserves the strip it sits in (see extendDomainBelowForBand) so series never run through it. */
+  const styleKey = (
+    <div className="legend legend-style-note chart-inplot-key">
+      <span className="legend-style solid-style">Actual</span>
+      <span className="legend-style dashed-style">Projected</span>
+      {hasInterpolated && <span className="legend-style dotted-style">Interpolated 2020</span>}
     </div>
   );
 
@@ -111,8 +117,9 @@ export default function ProjectionLineChart({ series }: ProjectionLineChartProps
           return null;
         }
 
+        const band = extendDomainBelowForBand(yAxis.min, yAxis.max, innerHeight, computeKeyBandHeight(keyLabels, innerWidth));
         const xScale = scaleLinear({ domain: [minYear, maxYear], range: [0, innerWidth] });
-        const yScale = scaleLinear({ domain: [yAxis.min, yAxis.max], range: [innerHeight, 0] });
+        const yScale = scaleLinear({ domain: [band.domainMin, yAxis.max], range: [innerHeight, 0] });
 
         const handlePointerLeave = () => setHover(null);
 
@@ -126,7 +133,7 @@ export default function ProjectionLineChart({ series }: ProjectionLineChartProps
               onPointerLeave={handlePointerLeave}
             >
               <Group left={leftMargin} top={CHART_MARGIN.top}>
-                <GridRows scale={yScale} width={innerWidth} numTicks={Y_TICK_COUNT} className="chart-grid-line" />
+                <GridRows scale={yScale} width={innerWidth} tickValues={[...yAxis.ticks]} className="chart-grid-line" />
                 <AxisLeft
                   scale={yScale}
                   hideTicks
@@ -219,6 +226,12 @@ export default function ProjectionLineChart({ series }: ProjectionLineChartProps
                   </g>
                 ))}
 
+
+                {band.bandHeight > 0 && (
+                  <foreignObject x={0} y={innerHeight - band.bandHeight} width={innerWidth} height={band.bandHeight}>
+                    {styleKey}
+                  </foreignObject>
+                )}
               </Group>
             </svg>
             {activeHover && (

@@ -7,6 +7,13 @@ export const CHART_MARGIN = Object.freeze({
   left: 56,
 });
 
+/* In-plot line-style key geometry (see computeKeyBandHeight): the line sample plus its gap, an approximate glyph width at the key's 13px size, the flex gap between items, one row's height, and the vertical padding around the rows. */
+const KEY_SAMPLE_WIDTH = 26;
+const KEY_CHARACTER_WIDTH = 6.5;
+const KEY_ITEM_GAP = 12;
+const KEY_ROW_HEIGHT = 18;
+const KEY_BAND_PADDING = 12;
+
 const Y_AXIS_CHARACTER_WIDTH = 7;
 const Y_AXIS_PADDING = 16;
 const Y_AXIS_MAX_MARGIN = 112;
@@ -94,6 +101,49 @@ function computePaddedYAxisScale(targetMin: number, targetMax: number, tickCount
   }
 
   return { min: axisMin, max: axisMax, ticks: tickList(axisMin, step, tickCount) };
+}
+
+/**
+ * Height of the strip along the bottom of the plot that holds the in-plot
+ * line-style key. Items wrap onto extra rows when the plot is too narrow for
+ * them side by side, so the strip grows with an estimate of how many rows the
+ * labels need; series are scaled to stay above it.
+ */
+export function computeKeyBandHeight(labels: readonly string[], innerWidth: number): number {
+  let rows = 1;
+  let rowWidth = 0;
+  for (const label of labels) {
+    const itemWidth = KEY_SAMPLE_WIDTH + label.length * KEY_CHARACTER_WIDTH;
+    const candidate = rowWidth === 0 ? itemWidth : rowWidth + KEY_ITEM_GAP + itemWidth;
+    if (rowWidth > 0 && candidate > innerWidth) {
+      rows += 1;
+      rowWidth = itemWidth;
+    } else {
+      rowWidth = candidate;
+    }
+  }
+  return rows * KEY_ROW_HEIGHT + KEY_BAND_PADDING;
+}
+
+/**
+ * Extends a y-axis domain downward so that `axisMin` lands `bandHeight` pixels
+ * above the x axis: everything the axis ticks span is drawn above the band,
+ * so no series line can enter the strip the in-plot key occupies. The band is
+ * capped at a third of the plot so tiny charts still show their data.
+ */
+export function extendDomainBelowForBand(
+  axisMin: number,
+  axisMax: number,
+  innerHeight: number,
+  bandHeight: number,
+): { domainMin: number; bandHeight: number } {
+  const band = Math.max(0, Math.min(bandHeight, Math.floor(innerHeight / 3)));
+  const dataHeight = innerHeight - band;
+  if (dataHeight <= 0 || axisMax <= axisMin) {
+    return { domainMin: axisMin, bandHeight: 0 };
+  }
+  const valuePerPixel = (axisMax - axisMin) / dataHeight;
+  return { domainMin: axisMin - band * valuePerPixel, bandHeight: band };
 }
 
 /** Roughly one tick per 70px of available width, so year labels never collide at narrow viewports. */
