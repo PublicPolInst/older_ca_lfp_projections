@@ -129,11 +129,13 @@ export default function ProjectionLineChart({ series }: ProjectionLineChartProps
                 <GridRows scale={yScale} width={innerWidth} numTicks={Y_TICK_COUNT} className="chart-grid-line" />
                 <AxisLeft
                   scale={yScale}
+                  hideTicks
                   tickValues={[...yAxis.ticks]}
                   tickFormat={(value) => formatYAxisTick(Number(value))}
                 />
                 <AxisBottom
                   top={innerHeight}
+                  hideTicks
                   scale={xScale}
                   numTicks={computeXAxisTickCount(innerWidth)}
                   tickFormat={(value) => String(Math.round(Number(value)))}
@@ -147,7 +149,7 @@ export default function ProjectionLineChart({ series }: ProjectionLineChartProps
                         className="series-line"
                         d={`M ${xScale(segment.from.year)} ${yScale(segment.from.displayedValue as number)} L ${xScale(segment.to.year)} ${yScale(segment.to.displayedValue as number)}`}
                         stroke={entry.color}
-                        strokeWidth={2}
+                        strokeWidth={2.25}
                         fill="none"
                         strokeDasharray={segment.interpolatedEdge ? "1 6" : undefined}
                       />
@@ -186,7 +188,7 @@ export default function ProjectionLineChart({ series }: ProjectionLineChartProps
                         className="series-line"
                         d={`M ${xScale(segment.from.year)} ${yScale(segment.from.displayedValue as number)} L ${xScale(segment.to.year)} ${yScale(segment.to.displayedValue as number)}`}
                         stroke={entry.color}
-                        strokeWidth={2}
+                        strokeWidth={2.25}
                         fill="none"
                         strokeDasharray="8 6"
                       />

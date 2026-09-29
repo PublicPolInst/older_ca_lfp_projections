@@ -85,8 +85,11 @@ export default function App() {
         <header className="report-header">
           <h1 className="report-title">Older Workers in California: Projections to 2040</h1>
           <p className="report-intro">
-            The projections below were developed for the PPIC report "Older Workers in California: Projections to
-            2040." The interactive was created with ChatGPT 5.6 Sol &amp; Claude Opus 5. Please contact Eric McGhee{" "}
+            The projections below were developed for the PPIC report{" "}
+            <a href="https://www.ppic.org/publication/older-workers-in-california/">
+              Older Workers in California: Projections to 2040
+            </a>
+            . The interactive was created with ChatGPT 5.6 Sol &amp; Claude Opus 5. Please contact Eric McGhee{" "}
             <a href="mailto:mcghee@ppic.org">mcghee@ppic.org</a> with questions or comments.
           </p>
         </header>

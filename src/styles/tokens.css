@@ -20,12 +20,12 @@
   /* Chart text/axis colors, ported from web-data-visualization's lib/visualization/plotlyDefaults.js (PLOTLY_FONT.color) and its Chart Anatomy "graph line" spec. */
   --color-chart-text: #383b3d;
   --color-chart-axis: #6d7075;
-  --font-heading: "Source Sans 3", Arial, sans-serif;
-  --font-body: "Source Sans 3", Arial, sans-serif;
-  --font-control: Inter, Arial, sans-serif;
-  --font-editorial: "Source Serif 4", Georgia, "Times New Roman", serif;
-  /* Wordmark only: web-data-visualization renders "PPIC" in Orbitron 900 inside its brand bar. */
-  --font-display: Orbitron, "Arial Black", sans-serif;
+  /* Proxima Nova throughout, served by PPIC's Adobe Fonts kit (see index.html); the fallback stack mirrors ppic.org's. */
+  --font-sans: "proxima-nova", "Proxima Nova", Helvetica, Arial, -apple-system, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-body: var(--font-sans);
+  --font-control: var(--font-sans);
+  --font-editorial: var(--font-sans);
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
