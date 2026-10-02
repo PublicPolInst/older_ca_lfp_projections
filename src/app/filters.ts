@@ -1,6 +1,8 @@
 export interface FilterDefinition {
   key: "raceEthnicity" | "gender" | "ageCategory" | "education";
   label: string;
+  /** Text for the unfiltered option; defaults to "All". */
+  allLabel?: string;
   values: readonly string[];
 }
 
@@ -16,6 +18,8 @@ export const FILTERS: readonly FilterDefinition[] = [
   {
     key: "ageCategory",
     label: "Age Group",
+    // The dataset only covers ages 55 and up, so say what "All" spans.
+    allLabel: "All (55 and older)",
     values: ["55-64", "65 and older", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90+"],
   },
   {

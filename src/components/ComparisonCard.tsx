@@ -66,7 +66,7 @@ const ComparisonCard = forwardRef<HTMLHeadingElement, ComparisonCardProps>(funct
               value={comparison[filter.key]}
               onChange={(event) => onChangeFilter(filter.key, event.currentTarget.value)}
             >
-              <option value="">All</option>
+              <option value="">{filter.allLabel ?? "All"}</option>
               {filter.values.map((value) => (
                 <option key={value} value={value}>
                   {value}
