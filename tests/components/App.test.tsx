@@ -63,7 +63,8 @@ describe("App", () => {
 
     expect(await screen.findByRole("heading", { level: 2, name: "Comparisons" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 2, name: "Historical data and projections" })).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: "Pacific Islander" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Other/None Listed" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Pacific Islander" })).not.toBeInTheDocument();
   });
 
   it("shows an error state with a working retry action", async () => {

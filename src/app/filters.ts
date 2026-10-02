@@ -10,9 +10,10 @@ export const FILTERS: readonly FilterDefinition[] = [
   {
     key: "raceEthnicity",
     label: "Race/Ethnicity",
-    // Intentional migration difference: v0 maps `pacis=TRUE` to Pacific
-    // Islander but omits the corresponding dropdown option.
-    values: ["Latino", "White", "Black", "Asian", "Pacific Islander", "Other/None Listed"],
+    // Pacific Islander is deliberately not selectable (as in v0's dropdown):
+    // rows with `pacis=TRUE` keep their own category, so they count toward
+    // every "All" aggregate but belong to none of the options listed here.
+    values: ["Latino", "White", "Black", "Asian", "Other/None Listed"],
   },
   { key: "gender", label: "Gender", values: ["Female", "Male"] },
   {
